@@ -35,189 +35,189 @@ class HerderSCPDriver;
 class HerderImpl : public Herder
 {
   public:
-    HerderImpl(Application& app);
-    ~HerderImpl();
+	HerderImpl(Application& app);
+	~HerderImpl();
 
-    State getState() const override;
-    std::string getStateHuman() const override;
+	State getState() const override;
+	std::string getStateHuman() const override;
 
-    void syncMetrics() override;
+	void syncMetrics() override;
 
-    // Bootstraps the HerderImpl if we're creating a new Network
-    void bootstrap() override;
+	// Bootstraps the HerderImpl if we're creating a new Network
+	void bootstrap() override;
 
-    void restoreState() override;
+	void restoreState() override;
 
-    SCP& getSCP();
-    HerderSCPDriver&
-    getHerderSCPDriver()
-    {
-        return mHerderSCPDriver;
-    }
+	SCP& getSCP();
+	HerderSCPDriver&
+	getHerderSCPDriver()
+	{
+		return mHerderSCPDriver;
+	}
 
-    void valueExternalized(uint64 slotIndex, StellarValue const& value);
-    void emitEnvelope(SCPEnvelope const& envelope);
+	void valueExternalized(uint64 slotIndex, StellarValue const& value);
+	void emitEnvelope(SCPEnvelope const& envelope);
 
-    TransactionQueue::AddResult
-    recvTransaction(TransactionFramePtr tx) override;
+	TransactionQueue::AddResult
+	recvTransaction(TransactionFramePtr tx) override;
 
-    EnvelopeStatus recvSCPEnvelope(SCPEnvelope const& envelope) override;
-    EnvelopeStatus recvSCPEnvelope(SCPEnvelope const& envelope,
-                                   const SCPQuorumSet& qset,
-                                   TxSetFrame txset) override;
+	EnvelopeStatus recvSCPEnvelope(SCPEnvelope const& envelope) override;
+	EnvelopeStatus recvSCPEnvelope(SCPEnvelope const& envelope,
+								   const SCPQuorumSet& qset,
+								   TxSetFrame txset) override;
 
-    void sendSCPStateToPeer(uint32 ledgerSeq, Peer::pointer peer) override;
+	void sendSCPStateToPeer(uint32 ledgerSeq, Peer::pointer peer) override;
 
-    bool recvSCPQuorumSet(Hash const& hash, const SCPQuorumSet& qset) override;
-    bool recvTxSet(Hash const& hash, const TxSetFrame& txset) override;
-    void peerDoesntHave(MessageType type, uint256 const& itemID,
-                        Peer::pointer peer) override;
-    TxSetFramePtr getTxSet(Hash const& hash) override;
-    SCPQuorumSetPtr getQSet(Hash const& qSetHash) override;
+	bool recvSCPQuorumSet(Hash const& hash, const SCPQuorumSet& qset) override;
+	bool recvTxSet(Hash const& hash, const TxSetFrame& txset) override;
+	void peerDoesntHave(MessageType type, uint256 const& itemID,
+						Peer::pointer peer) override;
+	TxSetFramePtr getTxSet(Hash const& hash) override;
+	SCPQuorumSetPtr getQSet(Hash const& qSetHash) override;
 
-    void processSCPQueue();
+	void processSCPQueue();
 
-    uint32_t getCurrentLedgerSeq() const override;
+	uint32_t getCurrentLedgerSeq() const override;
 
-    SequenceNumber getMaxSeqInPendingTxs(AccountID const&) override;
+	SequenceNumber getMaxSeqInPendingTxs(AccountID const&) override;
 
-    void triggerNextLedger(uint32_t ledgerSeqToTrigger) override;
+	void triggerNextLedger(uint32_t ledgerSeqToTrigger) override;
 
-    void setUpgrades(Upgrades::UpgradeParameters const& upgrades) override;
-    std::string getUpgradesJson() override;
+	void setUpgrades(Upgrades::UpgradeParameters const& upgrades) override;
+	std::string getUpgradesJson() override;
 
-    bool resolveNodeID(std::string const& s, PublicKey& retKey) override;
+	bool resolveNodeID(std::string const& s, PublicKey& retKey) override;
 
-    Json::Value getJsonInfo(size_t limit, bool fullKeys = false) override;
-    Json::Value getJsonQuorumInfo(NodeID const& id, bool summary, bool fullKeys,
-                                  uint64 index) override;
-    Json::Value getJsonTransitiveQuorumIntersectionInfo(bool fullKeys) const;
-    virtual Json::Value getJsonTransitiveQuorumInfo(NodeID const& id,
-                                                    bool summary,
-                                                    bool fullKeys) override;
-    QuorumTracker::QuorumMap const& getCurrentlyTrackedQuorum() const override;
+	Json::Value getJsonInfo(size_t limit, bool fullKeys = false) override;
+	Json::Value getJsonQuorumInfo(NodeID const& id, bool summary, bool fullKeys,
+								  uint64 index) override;
+	Json::Value getJsonTransitiveQuorumIntersectionInfo(bool fullKeys) const;
+	virtual Json::Value getJsonTransitiveQuorumInfo(NodeID const& id,
+													bool summary,
+													bool fullKeys) override;
+	QuorumTracker::QuorumMap const& getCurrentlyTrackedQuorum() const override;
 
 #ifdef BUILD_TESTS
-    // used for testing
-    PendingEnvelopes& getPendingEnvelopes();
+	// used for testing
+	PendingEnvelopes& getPendingEnvelopes();
 #endif
 
-    // helper function to verify envelopes are signed
-    bool verifyEnvelope(SCPEnvelope const& envelope);
-    // helper function to sign envelopes
-    void signEnvelope(SecretKey const& s, SCPEnvelope& envelope);
+	// helper function to verify envelopes are signed
+	bool verifyEnvelope(SCPEnvelope const& envelope);
+	// helper function to sign envelopes
+	void signEnvelope(SecretKey const& s, SCPEnvelope& envelope);
 
-    // helper function to verify SCPValues are signed
-    bool verifyStellarValueSignature(StellarValue const& sv);
-    // helper function to sign SCPValues
-    void signStellarValue(SecretKey const& s, StellarValue& sv);
+	// helper function to verify SCPValues are signed
+	bool verifyStellarValueSignature(StellarValue const& sv);
+	// helper function to sign SCPValues
+	void signStellarValue(SecretKey const& s, StellarValue& sv);
 
   private:
-    // return true if values referenced by envelope have a valid close time:
-    // * it's within the allowed range (using lcl if possible)
-    // * it's recent enough (if `enforceRecent` is set)
-    bool checkCloseTime(SCPEnvelope const& envelope, bool enforceRecent);
+	// return true if values referenced by envelope have a valid close time:
+	// * it's within the allowed range (using lcl if possible)
+	// * it's recent enough (if `enforceRecent` is set)
+	bool checkCloseTime(SCPEnvelope const& envelope, bool enforceRecent);
 
-    void ledgerClosed();
+	void ledgerClosed();
 
-    void startRebroadcastTimer();
-    void rebroadcast();
-    void broadcast(SCPEnvelope const& e);
+	void startRebroadcastTimer();
+	void rebroadcast();
+	void broadcast(SCPEnvelope const& e);
 
-    void processSCPQueueUpToIndex(uint64 slotIndex);
+	void processSCPQueueUpToIndex(uint64 slotIndex);
 
-    TransactionQueue mTransactionQueue;
+	TransactionQueue mTransactionQueue;
 
-    void
-    updateTransactionQueue(std::vector<TransactionFramePtr> const& applied);
+	void
+	updateTransactionQueue(std::vector<TransactionFramePtr> const& applied);
 
-    PendingEnvelopes mPendingEnvelopes;
-    Upgrades mUpgrades;
-    HerderSCPDriver mHerderSCPDriver;
+	PendingEnvelopes mPendingEnvelopes;
+	Upgrades mUpgrades;
+	HerderSCPDriver mHerderSCPDriver;
 
-    void herderOutOfSync();
+	void herderOutOfSync();
 
-    // attempt to retrieve additional SCP messages from peers
-    void getMoreSCPState();
+	// attempt to retrieve additional SCP messages from peers
+	void getMoreSCPState();
 
-    // last slot that was persisted into the database
-    // keep track of all messages for MAX_SLOTS_TO_REMEMBER slots
-    uint64 mLastSlotSaved;
+	// last slot that was persisted into the database
+	// keep track of all messages for MAX_SLOTS_TO_REMEMBER slots
+	uint64 mLastSlotSaved;
 
-    // timer that detects that we're stuck on an SCP slot
-    VirtualTimer mTrackingTimer;
+	// timer that detects that we're stuck on an SCP slot
+	VirtualTimer mTrackingTimer;
 
-    // tracks the last time externalize was called
-    VirtualClock::time_point mLastExternalize;
+	// tracks the last time externalize was called
+	VirtualClock::time_point mLastExternalize;
 
-    // saves the SCP messages that the instance sent out last
-    void persistSCPState(uint64 slot);
-    // restores SCP state based on the last messages saved on disk
-    void restoreSCPState();
+	// saves the SCP messages that the instance sent out last
+	void persistSCPState(uint64 slot);
+	// restores SCP state based on the last messages saved on disk
+	void restoreSCPState();
 
-    // saves upgrade parameters
-    void persistUpgrades();
-    void restoreUpgrades();
+	// saves upgrade parameters
+	void persistUpgrades();
+	void restoreUpgrades();
 
-    // called every time we get ledger externalized
-    // ensures that if we don't hear from the network, we throw the herder into
-    // indeterminate mode
-    void trackingHeartBeat();
+	// called every time we get ledger externalized
+	// ensures that if we don't hear from the network, we throw the herder into
+	// indeterminate mode
+	void trackingHeartBeat();
 
-    VirtualTimer mTriggerTimer;
+	VirtualTimer mTriggerTimer;
 
-    VirtualTimer mRebroadcastTimer;
+	VirtualTimer mRebroadcastTimer;
 
-    Application& mApp;
-    LedgerManager& mLedgerManager;
+	Application& mApp;
+	LedgerManager& mLedgerManager;
 
-    struct SCPMetrics
-    {
-        medida::Meter& mLostSync;
+	struct SCPMetrics
+	{
+		medida::Meter& mLostSync;
 
-        medida::Meter& mEnvelopeEmit;
-        medida::Meter& mEnvelopeReceive;
+		medida::Meter& mEnvelopeEmit;
+		medida::Meter& mEnvelopeReceive;
 
-        // Counters for things reached-through the
-        // SCP maps: Slots and Nodes
-        medida::Counter& mCumulativeStatements;
+		// Counters for things reached-through the
+		// SCP maps: Slots and Nodes
+		medida::Counter& mCumulativeStatements;
 
-        // envelope signature verification
-        medida::Meter& mEnvelopeValidSig;
-        medida::Meter& mEnvelopeInvalidSig;
+		// envelope signature verification
+		medida::Meter& mEnvelopeValidSig;
+		medida::Meter& mEnvelopeInvalidSig;
 
-        SCPMetrics(Application& app);
-    };
+		SCPMetrics(Application& app);
+	};
 
-    SCPMetrics mSCPMetrics;
+	SCPMetrics mSCPMetrics;
 
-    // Check that the quorum map intersection state is up to date, and if not
-    // run a background job that re-analyzes the current quorum map.
-    void checkAndMaybeReanalyzeQuorumMap();
+	// Check that the quorum map intersection state is up to date, and if not
+	// run a background job that re-analyzes the current quorum map.
+	void checkAndMaybeReanalyzeQuorumMap();
 
-    struct QuorumMapIntersectionState
-    {
-        uint32_t mLastCheckLedger{0};
-        uint32_t mLastGoodLedger{0};
-        size_t mNumNodes{0};
-        Hash mLastCheckQuorumMapHash{};
-        bool mRecalculating{false};
-        std::pair<std::vector<PublicKey>, std::vector<PublicKey>>
-            mPotentialSplit{};
-        std::set<std::set<PublicKey>> mIntersectionCriticalNodes{};
+	struct QuorumMapIntersectionState
+	{
+		uint32_t mLastCheckLedger{0};
+		uint32_t mLastGoodLedger{0};
+		size_t mNumNodes{0};
+		Hash mLastCheckQuorumMapHash{};
+		bool mRecalculating{false};
+		std::pair<std::vector<PublicKey>, std::vector<PublicKey>>
+			mPotentialSplit{};
+		std::set<std::set<PublicKey>> mIntersectionCriticalNodes{};
 
-        bool
-        hasAnyResults() const
-        {
-            return mLastGoodLedger != 0;
-        }
+		bool
+		hasAnyResults() const
+		{
+			return mLastGoodLedger != 0;
+		}
 
-        bool
-        enjoysQuorunIntersection() const
-        {
-            return mLastCheckLedger == mLastGoodLedger;
-        }
-    };
-    QuorumMapIntersectionState mLastQuorumMapIntersectionState;
+		bool
+		enjoysQuorunIntersection() const
+		{
+			return mLastCheckLedger == mLastGoodLedger;
+		}
+	};
+	QuorumMapIntersectionState mLastQuorumMapIntersectionState;
 };
 }

@@ -22,30 +22,30 @@ namespace stellar
 class LedgerCloseData
 {
   public:
-    LedgerCloseData(uint32_t ledgerSeq,
-                    std::shared_ptr<AbstractTxSetFrameForApply> txSet,
-                    StellarValue const& v);
+	LedgerCloseData(uint32_t ledgerSeq,
+					std::shared_ptr<AbstractTxSetFrameForApply> txSet,
+					StellarValue const& v);
 
-    uint32_t
-    getLedgerSeq() const
-    {
-        return mLedgerSeq;
-    }
-    std::shared_ptr<AbstractTxSetFrameForApply>
-    getTxSet() const
-    {
-        return mTxSet;
-    }
-    StellarValue const&
-    getValue() const
-    {
-        return mValue;
-    }
+	uint32_t
+	getLedgerSeq() const
+	{
+		return mLedgerSeq;
+	}
+	std::shared_ptr<AbstractTxSetFrameForApply>
+	getTxSet() const
+	{
+		return mTxSet;
+	}
+	StellarValue const&
+	getValue() const
+	{
+		return mValue;
+	}
 
   private:
-    uint32_t mLedgerSeq;
-    std::shared_ptr<AbstractTxSetFrameForApply> mTxSet;
-    StellarValue mValue;
+	uint32_t mLedgerSeq;
+	std::shared_ptr<AbstractTxSetFrameForApply> mTxSet;
+	StellarValue mValue;
 };
 
 std::string stellarValueToString(Config const& c, StellarValue const& sv);

@@ -15,18 +15,18 @@ class Config;
 class QuorumIntersectionChecker
 {
   public:
-    static std::shared_ptr<QuorumIntersectionChecker>
-    create(stellar::QuorumTracker::QuorumMap const& qmap,
-           stellar::Config const& cfg, bool quiet = false);
+	static std::shared_ptr<QuorumIntersectionChecker>
+	create(stellar::QuorumTracker::QuorumMap const& qmap,
+		   stellar::Config const& cfg, bool quiet = false);
 
-    static std::set<std::set<PublicKey>>
-    getIntersectionCriticalGroups(stellar::QuorumTracker::QuorumMap const& qmap,
-                                  stellar::Config const& cfg);
+	static std::set<std::set<PublicKey>>
+	getIntersectionCriticalGroups(stellar::QuorumTracker::QuorumMap const& qmap,
+								  stellar::Config const& cfg);
 
-    virtual ~QuorumIntersectionChecker(){};
-    virtual bool networkEnjoysQuorumIntersection() const = 0;
-    virtual size_t getMaxQuorumsFound() const = 0;
-    virtual std::pair<std::vector<PublicKey>, std::vector<PublicKey>>
-    getPotentialSplit() const = 0;
+	virtual ~QuorumIntersectionChecker(){};
+	virtual bool networkEnjoysQuorumIntersection() const = 0;
+	virtual size_t getMaxQuorumsFound() const = 0;
+	virtual std::pair<std::vector<PublicKey>, std::vector<PublicKey>>
+	getPotentialSplit() const = 0;
 };
 }
