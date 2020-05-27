@@ -10,9 +10,11 @@ def screenTarget(raw, restriction):
             return include[1].split('.')[0]
     return ""
 def screenAlotTarget(raw, restriction):
-    selfDef = raw.split('\"') # scrren the included part
+    selfDef = raw.split('\"') # screen the included part
     if(len(selfDef) > 1):
         include = selfDef[1].split('/')
+        if(len(include) == 1):
+            return include[0].split('.')[0]
         for r in restriction: # screen sources included from other directory
             if(include[0] == r):
                 if(include[0] == os.getcwd().split('/')[-1]):
@@ -21,7 +23,6 @@ def screenAlotTarget(raw, restriction):
                     return r
     return ""
 g = Digraph('G', filename='test.gv')
-g.edge_attr.update(arrowhead='vee')
 strongRelation = False
 for filename in os.listdir(os.getcwd()):
     # print(filename)
@@ -32,12 +33,15 @@ for filename in os.listdir(os.getcwd()):
     else:
         continue
     with open(os.path.join(os.getcwd(), filename), 'r') as f: # open in readonly mode
+        print('reading ' + filename)
         lines = f.readlines()
         for line in lines:
             if line.split(' ')[0] == '#include':
-                # target = screenTarget(line, os.getcwd().split('/')[-1])
+                print('\tFound: ' + line)
+                # Change this line to decide which modules can be on the dependency graph
                 target = screenAlotTarget(line, ["herder"])
                 source = screenSource(filename)
+                print('\tFound: ' + target + ', ' + source)
                 if(len(target) > 0):
                     if(source != target):
                         if(strongRelation):
